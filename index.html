@@ -1,0 +1,163 @@
+<html>
+  <head>
+    <style>
+      body {
+        background-color: #80A1D4;
+      }
+      #container {
+        position: absolute;
+        width: 205px;
+        height: 150px;
+        top: 50px;
+        left: 0;
+      }
+      #image {
+        width: 100%;
+        height: 100%;
+      }
+      #bomb {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 30px;
+        display: none;
+      }
+      #bomb-image {
+        width: 100%;
+        height: 100%;
+      }
+      #bottom-container {
+        position: absolute;
+        width: 250px;
+        height: 138px;
+        bottom: 0;
+        left: 50%;
+        margin-left: -75px;
+      }
+      #bottom-image {
+        width: 100%;
+        height: 100%;
+      }
+      #score {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 48px;
+        font-family: sans-serif;
+        color: #084B83;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body onkeydown="handleKeyDown(event)">
+  <body ontouchstart="handleScreenPress(event)">
+  <body onmousedown="handleScreenPress(event)">
+    <div id="container">
+      <img id="image" src="BsevenbeanSprite150.png" />
+    </div>
+    <div id="bomb">
+      <img id="image" src="bean60.png" />
+    </div>
+    <div id="score">0</div>
+    <div id="bottom-container">
+    <img id="bottom-image" src="beanship250.png" /></div>
+    <script>
+  var container = document.getElementById('container');
+  var bomb = document.getElementById('bomb');
+  var container2 = document.getElementById('container2');
+  var bombVisible = false;
+  var containerX = 0;
+  var canDropBomb = true;
+  var score = 0;
+
+  function handleKeyDown(event) {
+    if (event.code === 'Space' && canDropBomb) {
+      // Show small circle and set its initial position
+      // to be at the bottom center of the container.
+      bomb.style.display = 'block';
+      var containerRect = container.getBoundingClientRect();
+      bomb.style.left = containerRect.left + 68.5 + 'px';
+      bomb.style.top = containerRect.bottom + 'px';
+      bombVisible = true;
+      canDropBomb = false;
+    }
+  }
+
+  function handleScreenPress(event) {
+  // Check if the screen has been pressed
+  if (event.type === 'touchstart' || event.type === 'mousedown') {
+     bomb.style.display = 'block';
+      var containerRect = container.getBoundingClientRect();
+      bomb.style.left = containerRect.left + 68.5 + 'px';
+      bomb.style.top = containerRect.bottom + 'px';
+      bombVisible = true;
+      canDropBomb = false;
+  }
+}
+
+ function checkForCollision() {
+  var bottomContainer = document.getElementById('bottom-container');
+  var bottomContainerRect = bottomContainer.getBoundingClientRect();
+  var bombRect = bomb.getBoundingClientRect();
+
+  // Check if the small circle has hit the bottom container.
+  if (bombRect.right > bottomContainerRect.left + 50 &&
+      bombRect.left < bottomContainerRect.right - 50 &&
+      bombRect.bottom > bottomContainerRect.top + 50 &&
+      bombRect.top < bottomContainerRect.bottom) {
+    // Increment the score.
+    score++;
+
+    // Update the score element on the page.
+    var scoreElement = document.getElementById('score');
+    scoreElement.innerText = score;
+
+    // Swap the image in the bottom container.
+    var bottomImage = document.getElementById('bottom-image');
+    bottomImage.src = "beanship_fire250.png";
+    bomb.style.display = 'none';
+    bombVisible = false;
+    canDropBomb = true;
+  }
+}
+
+
+  function update() {
+    // Move the container to the right.
+    containerX += 5;
+    container.style.left = containerX + 'px';
+
+    // If the container has moved off the screen to the right,
+    // move it back to the left.
+    if (containerX > window.innerWidth) {
+      containerX = 0;
+    var bottomImage = document.getElementById('bottom-image');
+    bottomImage.src = "beanship250.png";
+      container.style.left = containerX + 'px';
+    }
+
+    checkForCollision();
+
+    // If the small circle is visible, update its position
+    // based on its current velocity.
+    if (bombVisible) {
+      var top = parseInt(bomb.style.top);
+      var left = parseInt(bomb.style.left);
+      bomb.style.top = top + 5 + 'px';
+      bomb.style.left = left + 2 + 'px';
+
+      // If the small circle has moved off the screen to the bottom,
+      // hide it and allow a new one to be dropped.
+      if (top > window.innerHeight) {
+        bomb.style.display = 'none';
+        bombVisible = false;
+        canDropBomb = true;
+      }
+    }
+  }
+
+  // Update the position of the circles every 10 milliseconds.
+  setInterval(update, 10);
+</script>
+      </body>
+</html>
