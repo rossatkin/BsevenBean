@@ -3,6 +3,7 @@
     <style>
       body {
         background-color: #80A1D4;
+        height = width;
       }
       #container {
         position: absolute;
@@ -50,8 +51,7 @@
     </style>
   </head>
   <body onkeydown="handleKeyDown(event)">
-  <body ontouchstart="handleScreenPress(event)">
-  <body onmousedown="handleScreenPress(event)">
+  <body onmousedown="handleMouseDown(event)">
     <div id="container">
       <img id="image" src="BsevenbeanSprite150.png" />
     </div>
@@ -83,9 +83,9 @@
     }
   }
 
-  function handleScreenPress(event) {
+  function handleMouseDown(event) {
   // Check if the screen has been pressed
-  if (event.type === 'touchstart' || event.type === 'mousedown') {
+  if (event.type === 'mousedown') {
      bomb.style.display = 'block';
       var containerRect = container.getBoundingClientRect();
       bomb.style.left = containerRect.left + 68.5 + 'px';
